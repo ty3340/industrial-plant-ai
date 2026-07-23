@@ -7,6 +7,7 @@ Run in its own terminal:  python mcp_server/batch_plant_functions.py
 """
 import os
 import json
+import asyncio
 from enum import IntEnum
 from typing import Dict
 
@@ -51,9 +52,24 @@ class OPCUABatchPlantClient:
         self.server_url = server_url or SERVER_URL
         self.client = None
 
-    async def connect(self):
-        self.client = Client(self.server_url)
-        await self.client.connect()          # anonymous — no username/password
+    async def connect(self, retries: int = 3, delay: float = 1.0):
+        """Connect with retries — OPC UA connections can fail transiently."""
+        last_exc = None
+        for attempt in range(1, retries + 1):
+            try:
+                self.client = Client(self.server_url)
+                await self.client.connect()      # anonymous — no username/password
+                return
+            except Exception as e:
+                last_exc = e
+                print(f"OPC UA connect attempt {attempt}/{retries} failed: {e}")
+                if attempt < retries:
+                    await asyncio.sleep(delay)
+        raise last_exc
+
+
+
+
 
     async def disconnect(self):
         if self.client:

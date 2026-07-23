@@ -21,7 +21,12 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),
       });
-      if (!res.ok) throw new Error(`API error ${res.status}`);
+
+      if (!res.ok) {
+        const detail = await res.json().then((d) => d.detail).catch(() => null);
+        throw new Error(detail || `API error ${res.status}`);
+      }
+
       const data = await res.json();
       setMessages((m) => [...m, { role: "assistant", text: data.answer }]);
     } catch (err) {

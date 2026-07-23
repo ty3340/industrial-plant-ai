@@ -10,6 +10,8 @@ def get_model():
     return init_chat_model(
         LLM_MODEL,
         temperature=0.2,
+        timeout = 60,
+        max_retries = 3,
     )
 
 

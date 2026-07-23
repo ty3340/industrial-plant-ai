@@ -1,0 +1,50 @@
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.chat {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 0;
+}
+
+.hint { color: #888; }
+
+.msg {
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  max-width: 85%;
+  white-space: pre-wrap;
+  line-height: 1.45;
+}
+.msg.user      { align-self: flex-end; background: #2563eb; color: #fff; }
+.msg.assistant { align-self: flex-start; background: #f1f5f9; color: #111; }
+.msg.error     { align-self: flex-start; background: #fee2e2; color: #991b1b; }
+
+.composer { display: flex; gap: 0.5rem; }
+.composer input {
+  flex: 1;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+.composer button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.composer button:disabled { opacity: 0.5; cursor: default; }

@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+backend/data/static_data/plant.db
+backend/scratch/
+
+# generated maintenance vector store
+backend/data/maintenance/chroma_db/
+
+# frontend
+node_modules/
+frontend/dist/

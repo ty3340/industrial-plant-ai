@@ -1,0 +1,3 @@
+pytest
+pytest-asyncio    # async agents/tools
+httpx             # required by FastAPI's TestClient

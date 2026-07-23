@@ -1,0 +1,5 @@
+[
+  {"question": "Can we produce 3 batches of Product A?", "expect": "POSSIBLE"},
+  {"question": "Can we produce 5 batches of Product B?", "expect": "POSSIBLE"},
+  {"question": "Can we produce 100000 batches of Product C?", "expect": "NOT POSSIBLE"}
+]

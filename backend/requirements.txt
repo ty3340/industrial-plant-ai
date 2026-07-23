@@ -1,0 +1,20 @@
+# --- LLM agents & orchestration (OpenAI gpt-4.1 via LangChain / LangGraph) ---
+langchain>=1.0
+langchain-openai
+langgraph
+langgraph-supervisor        # supervisor / orchestrator (Phase 4C)
+langchain-mcp-adapters
+mcp
+langchain-chroma
+chromadb
+langchain-text-splitters
+
+
+# --- API layer ---
+fastapi
+uvicorn
+pydantic
+python-dotenv
+
+# --- Plant data layer: OPC UA simulator + MCP source ---
+asyncua>=1.0.0

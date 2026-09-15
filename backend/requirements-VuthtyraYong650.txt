@@ -1,4 +1,4 @@
-# --- LLM agents & orchestration (OpenAI gpt-4o via LangChain / LangGraph) ---
+# --- LLM agents & orchestration (OpenAI gpt-4.1 via LangChain / LangGraph) ---
 langchain>=1.0
 langchain-openai
 langgraph
@@ -15,6 +15,8 @@ fastapi
 uvicorn
 pydantic
 python-dotenv
+httpx
+
 
 # --- Plant data layer: OPC UA simulator + MCP source ---
 asyncua>=1.0.0

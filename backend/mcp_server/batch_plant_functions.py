@@ -17,9 +17,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 # host/port define where the streamable-HTTP endpoint is served; FastMCP mounts
-# it at the "/mcp" path by default.
-mcp_server = FastMCP("batch_plant_opcua", host="127.0.0.1", port=8000)
+# it at the "/mcp" path by default. Host/port are env-driven so the container can
+# bind 0.0.0.0 (reachable from other containers) while local dev stays on 127.0.0.1.
+mcp_server = FastMCP(
+    "batch_plant_opcua",
+    host=os.getenv("MCP_HOST", "127.0.0.1"),
+    port=int(os.getenv("MCP_PORT", "8000")),
+)
+
+
+
 
 SERVER_URL = os.getenv("OPC_SERVER_URL", "opc.tcp://localhost:26543/BatchPlantServer")
 

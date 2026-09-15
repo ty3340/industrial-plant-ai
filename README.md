@@ -3,7 +3,7 @@
 A multi-agent AI system that answers natural-language questions about a
 simulated chemical **batch plant** — including the headline question:
 
-> *"Can we produce N batches of Product X right now?"*
+> _"Can we produce N batches of Product X right now?"_
 
 To answer, a supervisor agent coordinates three specialists that pull from three
 different real-world data sources — a recipe database, live machine/tank
@@ -11,8 +11,8 @@ telemetry over the **OPC UA** industrial protocol, and a set of maintenance
 documents searched via **RAG**. The result is a decision with the numbers,
 the reasoning, and a final `VERDICT: POSSIBLE` / `NOT POSSIBLE`.
 
-This is a learning / portfolio project: the *architecture* mirrors how real
-industrial-AI systems are built, while the *maturity* is prototype (see
+This is a learning / portfolio project: the _architecture_ mirrors how real
+industrial-AI systems are built, while the _maturity_ is prototype (see
 [Architecture & Limitations](#architecture--limitations)).
 
 ---
@@ -51,12 +51,12 @@ covers what would otherwise be many REST routes.
 
 ### The four processes
 
-| Process | Port | Framework | Role |
-|---|---|---|---|
-| React frontend | 5173 | Vite | Chat UI |
-| REST API | 8001 | **FastAPI** / uvicorn | Exposes `/query`, `/health`, `/health/deep` |
-| MCP server | 8000 | **FastMCP** (`mcp`) | Wraps OPC UA reads as MCP tools |
-| OPC UA simulator | 26543 | **asyncua** | Fake plant emitting live telemetry |
+| Process          | Port  | Framework             | Role                                        |
+| ---------------- | ----- | --------------------- | ------------------------------------------- |
+| React frontend   | 5173  | Vite                  | Chat UI                                     |
+| REST API         | 8001  | **FastAPI** / uvicorn | Exposes `/query`, `/health`, `/health/deep` |
+| MCP server       | 8000  | **FastMCP** (`mcp`)   | Wraps OPC UA reads as MCP tools             |
+| OPC UA simulator | 26543 | **asyncua**           | Fake plant emitting live telemetry          |
 
 > Note: the MCP server owns port **8000**, so the FastAPI app runs on **8001**.
 
@@ -134,24 +134,28 @@ Start the four processes in this order, each in its own terminal, with the
 venv activated for the backend ones.
 
 **Terminal 1 — OPC UA simulator (:26543)**
+
 ```powershell
 cd backend
 python data/simulator/opcua_server.py
 ```
 
 **Terminal 2 — MCP server (:8000)**
+
 ```powershell
 cd backend
 python mcp_server/batch_plant_functions.py
 ```
 
 **Terminal 3 — FastAPI (:8001)**
+
 ```powershell
 cd backend
 uvicorn app.main:app --port 8001
 ```
 
 **Terminal 4 — Frontend (:5173)**
+
 ```powershell
 cd frontend
 npm run dev
@@ -174,6 +178,27 @@ python -m app.cmd                                            # interactive REPL
 
 ---
 
+## Run with Docker (one command)
+
+The whole stack runs in containers — no need for four separate terminals.
+
+**Windows + OneDrive note:** if the project sits on your Desktop, Windows keeps it
+inside OneDrive, and Docker can't build from a OneDrive-synced folder. The included
+`docker-run.ps1` sidesteps this by building from a local copy — run it instead of
+`docker compose up`:
+
+```powershell
+.\docker-run.ps1
+```
+
+Then open <http://localhost:5173>. Stop the stack with:
+
+```powershell
+docker compose -f "C:\dev\Industrial-AI-Project\docker-compose.yml" down
+```
+
+---
+
 ## Example questions
 
 - `Can we produce 3 batches of Product A?` — full feasibility (all three agents)
@@ -185,11 +210,11 @@ python -m app.cmd                                            # interactive REPL
 
 ## API reference
 
-| Method | Path | Purpose |
-|---|---|---|
-| `GET` | `/health` | Liveness — is the API process up? (instant, no dependencies) |
-| `GET` | `/health/deep` | Readiness — probes the OPC UA sim + MCP server; `503` if any is down |
-| `POST` | `/query` | `{ "question": "..." }` → `{ "answer": "..." }` |
+| Method | Path           | Purpose                                                              |
+| ------ | -------------- | -------------------------------------------------------------------- |
+| `GET`  | `/health`      | Liveness — is the API process up? (instant, no dependencies)         |
+| `GET`  | `/health/deep` | Readiness — probes the OPC UA sim + MCP server; `503` if any is down |
+| `POST` | `/query`       | `{ "question": "..." }` → `{ "answer": "..." }`                      |
 
 `/query` failure modes are mapped to clean statuses: **504** on timeout,
 **502** on an upstream failure (with an actionable message), **422** on a
@@ -257,18 +282,18 @@ from a production industrial system is intentional and worth naming:
   decisions. Production would add deterministic guardrails around the LLM, a
   human in the loop, and a far larger eval set (there are 3 cases today).
 - **Observability.** Basic request logging exists; there is no distributed
-  tracing (e.g. LangSmith / OpenTelemetry) to explain *why* an agent answered
+  tracing (e.g. LangSmith / OpenTelemetry) to explain _why_ an agent answered
   as it did.
-- **Operations.** No Docker, no CI, four manually-started processes. Data lives
-  in local SQLite/Chroma rather than a plant historian (e.g. OSIsoft PI) or
-  MES/ERP integration.
+
+- **Operations.** Containerized with Docker Compose, but no CI pipeline yet. Data
+  lives in local SQLite/Chroma
+
 - **State.** Each query is stateless — no conversation memory across turns.
 
 ### Roadmap
 
 - [ ] Structured `verdict` field in `QueryResponse` (+ a green/red badge in the UI)
 - [ ] Expand the eval set (maintenance-blocker and machine-down `NOT POSSIBLE` cases)
-- [ ] Dockerize the four processes (`docker compose up`)
+- [ ] Dockerize the four processes (`docker-run.ps1` / `docker compose`)
 - [ ] Structured logging / tracing
 - [ ] Conversation memory and response streaming
-```

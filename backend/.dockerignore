@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+scratch/
+data/static_data/plant.db
+data/maintenance/chroma_db/
